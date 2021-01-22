@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% block title %} User Profile {% endblock %}
+{% block style %}
+    <style>
+        body {
+            background-color: var(--brand-color);
+        }
+        .container  {
+            display: flex;
+            justify-content: center;
+        }
+        .card {
+            box-shadow: 2px 2px 0.5em #2e4229;
+            background-color: #2e4229;
+            min-width:50vw;
+            padding: 1rem;
+            overflow: hidden;
+            color:white;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .card .card-img-top {
+            height: 150px;
+            width: 150px;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .info p {
+            margin: 0;
+            font-size: 0.9rem;
+            padding: 0.2em;
+        }
+
+        .info p + .info p {
+            border-color: var(--gray2);
+        }
+        .footer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+        }
+
+    </style>
+{% endblock %}
+{% block content %}
+<div class="container mt-5">
+        <div class="card">
+            <img src="https://picsum.photos/150/150" alt="" class="card-img-top">
+
+            <div class="info">
+                <p class="text-center">{{ user.username}}</p>
+                <p>{{ user.email }}</p>
+                <p>{{ user.last_name }} {{ user.first_name }}</p>
+            </div>
+
+            <div class="d-flex">
+                <a href="{% url 'password_change' %}" class="btn bg-brand">Change Password</a>
+                <a href="#" class="btn bg-brand mx-2">Edit Profile</a>
+            </div>
+
+            <div class="interest">
+                <!-- <h6>SKILLS</h6> -->
+
+                <div>
+
+                </div>
+            </div>
+        </div>
+</div>
+{% endblock %}

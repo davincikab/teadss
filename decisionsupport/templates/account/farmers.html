@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% block title %} Login {% endblock %}
+{% block style %} 
+<style>
+    body {
+        background-color: var(--light);
+    }
+    .container {
+        height: 73.5vh;
+       
+    }
+
+    .footer {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+    }
+
+    .card {
+            /* box-shadow: 2px 2px 0.5em #ccc; */
+            border:0px;
+            background-color: #fff;
+            padding: 0.5rem;
+            overflow: hidden;
+            display: flex;
+            flex-direction: row;
+            justify-content: start;
+            align-items: center;
+    }
+
+    .card .card-img-top {
+            height: 50px;
+            width: 50px;
+            object-fit: cover;
+            border-radius: 50%;
+    }
+
+    .info {
+        display: flex;
+    }
+    .info p {
+        margin:0;
+        display: flex;
+        flex-direction: column;
+        margin:0 0.4em;
+        font-size: 0.9em;
+    }
+
+    p span {
+        font-size: 0.8em;
+        color:#ccc;
+    }
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+        font-size: 0.8em;
+    }
+</style>
+{% endblock %}
+{% block content %}
+    <div class="main-container">
+        <div class="container mt-5">
+
+            <form class="form-inline my-2 w-100">
+                <input class="form-control mr-sm-2 w-75" type="search" name="query" placeholder="Search" aria-label="Search">
+                <button class="btn bg-brand text-white my-2 my-sm-0" type="submit">Search</button>
+            </form>
+
+            <div class="user-list">
+                {% for farmer in farmers %}
+                    <div class="card my-2">
+                        <img src="https://picsum.photos/150/150" alt="" class="card-img-top mr-3">
+
+                        <div class="info">
+                            <p>
+                                <span>Name</span>
+                                {{ farmer.username}}
+                            </p>
+                            <p>
+                                <span>Email</span>
+                                {{ farmer.email }}
+                            </p>
+                            <p>
+                                <span>Full Name</span>
+                                {{ farmer.get_full_name }}
+                            </p>
+
+                            <p>
+                                <span>Location</span>
+                                Kericho County
+                            </p>
+
+                            <p>
+                                <span>Address</span>
+                                123, Kericho County, Kenya
+                            </p>
+                        </div>
+                    </div>                
+                {% endfor %}
+            </div>
+            
+
+            <div class="pagination mt-2">
+                <span class="step-links">
+                    {% if farmers.has_previous %}
+                    <a href="?page=1">&laquo; first</a>
+                    <a href="?page={{ farmers.previous_page_number }}">previous</a>
+                    {% endif %}
+                    <span class="current">
+                    Page {{ farmers.number }} of {{ farmers.paginator.num_pages }}.
+                    </span>
+                    {% if farmers.has_next %}
+                        <a href="?page={{ farmers.next_page_number }}">next</a>
+                        <a href="?page={{ farmers.paginator.num_pages }}">last &raquo;</a>
+                    {% endif %}
+                </span>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %} Login {% endblock %}
+{% block style %} 
+<style>
+    .container {
+        height: 73.5vh;
+    }
+
+    .footer {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+    }
+</style>
+{% endblock %}
+{% block content %}
+    <div class="main-container">
+        <div class="container mt-5">
+            <a href="{% url 'farmer-signup'%}" class="btn btn-primary">SignUp as Farmer</a>
+            <a href="{% url 'decisionmaker-signup' %}" class="btn btn-primary">SignUp as Decision Maker</a>
+        </div>
+    </div>
+{% endblock %}

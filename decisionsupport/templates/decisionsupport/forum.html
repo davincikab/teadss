@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block title %} Forum {% endblock %}
+{% block style %}
+    <style>
+        .issues-list {
+            height: 90vh;
+        }
+        .issue {
+            box-shadow: 3px 3px 0.4em #ccc;
+            padding: 1em 0.6em;
+        }
+        .header {
+            justify-content: space-between;
+        }
+    </style>
+{% endblock %}
+{% block content %}
+<div class="container mt-5">
+    <h5 class="mt-5">Farmers Forum</h5>
+
+    <div class="row">
+        <div class="col-md-9 " id="">
+            <div class="issues-list">
+               
+                <div class="">
+                    <div class="header d-flex my-2">
+                        <h5>Issues</h5>
+                        <button class="btn bg-brand">Raise Issue <i class="fa fa-plus"></i></button>
+                    </div>
+                    
+                    <div class="issue">
+                        <h5>Tea Pest and Diseases</h5>
+                        <p>
+                            Small, pinhole-size spots on young leaves; spots become transparent, larger, and light brown; blisters on underside of leaves; dark green, water-soaked zones surrounding blisters; blisters may be white and velvety or brown; 
+                            young stems bent and distorted, may break off or die
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="comment-section">
+                <div class="comment-form"></div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <h5>Topics</h5>
+            <div class="">
+                {% for topic in topics %}
+                     <div class="tag">
+                         
+                     </div>        
+                {% endfor %}
+            </div>
+
+            <h5>Tags</h5>
+            <div class="">
+                {% for tag in tags %} 
+                    <div class="tag">
+                        
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

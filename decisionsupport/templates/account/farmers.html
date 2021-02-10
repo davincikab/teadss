@@ -5,6 +5,7 @@
     body {
         background-color: var(--light);
     }
+
     .container {
         height: 73.5vh;
        
@@ -75,7 +76,7 @@
                         <div class="info">
                             <p>
                                 <span>Name</span>
-                                {{ farmer.username}}
+                                <a href="/account/profile/?user={{ farmer.username}}">{{ farmer.username}}</a>
                             </p>
                             <p>
                                 <span>Email</span>

@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .forms import FarmerSignUpForm, DecisonMakerSignUpForm
+from django.http import HttpResponseNotFound
 from django.views.generic import CreateView
 from django.contrib.auth import login
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -7,6 +7,7 @@ from django.db.models import FilteredRelation, Q
 
 
 from .models import User
+from .forms import FarmerSignUpForm, DecisonMakerSignUpForm, ProfileForm
 
 # Create your views here.
 def signup(request):
@@ -56,7 +57,20 @@ class DecisonMakerSignUpView(CreateView):
 
 # profile view
 def profile(request):
-    return render(request, "account/user_profile.html")
+    # determine if the username
+    profile = request.user
+    if request.GET.get('user', None):
+        username = request.GET.get('user')
+        try:
+            profile = User.objects.get(username=username)
+        except User.DoesNotExist:
+            return HttpResponseNotFound("<p>Page not found</p>")
+    
+    context = {
+        'profile':profile
+    }
+
+    return render(request, "account/user_profile.html", context)
 
 def farmers_view(request):
     if request.GET.get('query'):
@@ -98,3 +112,25 @@ def decisionmarkers_view(request):
     }
 
     return render(request, 'account/decision_makers.html', context)
+
+# update user profile
+def update_user_profile(request):
+    if request.method == 'POST':
+        form = ProfileForm(request.POST, request.FILES)
+        if form.is_valid():
+            user = request.user
+            
+            # update the details manually
+            user.first_name = request.POST.get('first_name')
+            user.last_name = request.POST.get('last_name')
+            user.phone_number = request.POST.get('phone_number')
+            user.save()
+
+            return redirect("/account/profile/")
+    else:
+        form = ProfileForm(instance=request.user)
+    context = {
+        'user_profile_form':form
+    }
+
+    return render(request, 'account/user_edit_form.html', context)

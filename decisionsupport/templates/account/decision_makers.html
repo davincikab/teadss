@@ -7,7 +7,6 @@
     }
     .container {
         height: 73.5vh;
-       
     }
 
     .footer {
@@ -17,22 +16,21 @@
     }
 
     .card {
-            /* box-shadow: 2px 2px 0.5em #ccc; */
-            border:0px;
-            background-color: #fff;
-            padding: 0.5rem;
-            overflow: hidden;
-            display: flex;
-            flex-direction: row;
-            justify-content: start;
-            align-items: center;
+        border:0px;
+        background-color: #fff;
+        padding: 0.5rem;
+        overflow: hidden;
+        display: flex;
+        flex-direction: row;
+        justify-content: start;
+        align-items: center;
     }
 
     .card .card-img-top {
-            height: 50px;
-            width: 50px;
-            object-fit: cover;
-            border-radius: 50%;
+        height: 50px;
+        width: 50px;
+        object-fit: cover;
+        border-radius: 50%;
     }
 
     .info {
@@ -68,22 +66,22 @@
             </form>
 
             <div class="user-list">
-                {% for farmer in decisionmakers %}
+                {% for decisionmaker in decisionmakers %}
                     <div class="card my-2">
                         <img src="https://picsum.photos/150/150" alt="" class="card-img-top mr-3">
 
                         <div class="info">
                             <p>
                                 <span>Name</span>
-                                {{ farmer.username}}
+                                <a href="/account/profile/?user={{ decisionmaker.username}}">{{ decisionmaker.username}}</a>
                             </p>
                             <p>
                                 <span>Email</span>
-                                {{ farmer.email }}
+                                {{ decisionmaker.email }}
                             </p>
                             <p>
                                 <span>Full Name</span>
-                                {{ farmer.get_full_name }}
+                                {{ decisionmaker.get_full_name }}
                             </p>
 
                             <p>

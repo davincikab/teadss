@@ -28,3 +28,9 @@ class FarmerSignUpForm(UserCreationForm):
         if commit:
             user.save()
         return user
+
+# create a useredit form
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ("first_name", "last_name", "phone_number",)

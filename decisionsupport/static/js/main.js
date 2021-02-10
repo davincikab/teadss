@@ -111,7 +111,7 @@ function filterByYear(year) {
         });
 
         if(layer.feature.properties.year != year) {
-            console.log(layer);
+            // console.log(layer);
 
             layer.setStyle({
                 fillOpacity:0,
@@ -131,4 +131,7 @@ $("#year-slider").on("change", function(e) {
     $("#title-year").text(value);
 
     filterByYear(parseInt(value));
-})
+});
+
+
+// QUERY TOOL: 

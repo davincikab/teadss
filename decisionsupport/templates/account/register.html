@@ -24,6 +24,7 @@
         <h5>{{ title }}</h5>
         {% csrf_token %}
         <div class="form-row">
+            {{ form.errors }}
             <div class="col">
                 {{ form.username.label_tag }}
                 {{ form.username }}

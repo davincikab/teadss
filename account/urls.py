@@ -1,5 +1,6 @@
 from django.urls import path
-from .views import FarmerSignUpView, signup, DecisonMakerSignUpView, profile, farmers_view, decisionmarkers_view
+from .views import FarmerSignUpView, signup, DecisonMakerSignUpView, profile, farmers_view, \
+    decisionmarkers_view, update_user_profile
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [
@@ -7,6 +8,7 @@ urlpatterns = [
     path("farmers/", farmers_view, name="farmers"),
     path("decision_makers/", decisionmarkers_view, name="decisionmakers"),
     path("profile/", profile, name="profile"),
+    path("update-profile/", update_user_profile, name="update-profile"),
     path("signup/", signup, name="signup"),
     path("signup/decisionmaker", DecisonMakerSignUpView.as_view(), name="decisionmaker-signup"),
     path("signup/farmer", FarmerSignUpView.as_view(), name="farmer-signup"),

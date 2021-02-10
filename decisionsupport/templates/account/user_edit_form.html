@@ -3,11 +3,19 @@
 {% block title %} Edit Profile {% endblock %}
 {% block style %} 
     <link rel="stylesheet" href="{% static 'css/registration.css' %}">
+    <style>
+        .footer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
 {% endblock %}
 {% block content %}
     <div class="container">
-        <div class="card">
+        <div class="card mt-5">
             <form action="" method="post" class="px-2 py-2" enctype="multipart/form-data">
+                {{ form.errors }}
                 <h5 class="text-center">Update Profile</h5>
                 {% csrf_token %}
                 {{ user_edit_form.as_p }}
@@ -16,4 +24,7 @@
             </form>
         </div>
     </div>
+{% endblock %}
+{% block javascript %} 
+    <script src="{% static 'js/addControl.js' %}"></script>
 {% endblock %}

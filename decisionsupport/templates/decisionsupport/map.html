@@ -6,6 +6,48 @@
 integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
 crossorigin=""/>
 <link rel="stylesheet" href="{% static 'css/map.css' %}">
+<style> 
+    .query-tab {
+        height:92vh;
+        width: 360px;
+        background-color: var(--white);
+        z-index: 2;
+        position: absolute;
+        top:0%;
+        left:-360px;
+        box-shadow: 4px 4px 0.3em var(--black);
+        transition: left 0.3s;
+        will-change: left;
+    }
+
+    .query-tab.open {
+        left:0%;
+    }
+
+    h5 {
+        font-size: 1.2em;
+        text-align: center;
+        margin-top: 0.5em;
+    }
+
+    .query-tab .close-btn {
+        position: absolute;
+        mix-blend-mode: color-dodge;
+        background-color: var(--white);
+        box-shadow: 4px 4px 0.3em var(--black);
+        cursor: pointer;
+        border-radius: 2px;
+        padding: 0.3em;
+        top:0%;
+        right:-5%;
+    }
+    .query-tab .section {
+        height: 20vh;
+        width: 100%;
+        background-color: var(--gray);
+        margin-bottom: 1em;
+    }
+</style>
 {% endblock %}
 
 {% block content %}
@@ -16,6 +58,25 @@ crossorigin=""/>
         <label for="">Year 
             <!-- <span id="help-year" class="text-small"> 1989 </span></label><br> -->
         <input type="range" min="1989" max="2019" step="10" id="year-slider" value="1989">
+    </div>
+
+    <div class="query-tab" id="query-tab">
+        <h5>QUERY TOOL</h5>
+        <div class="close-btn" id="close-btn">
+            <i class="fa fa-times"></i>
+        </div>
+
+
+        <div class="section">
+
+        </div>
+
+        <div class="section">
+            
+        </div>
+        <div class="section">
+            
+        </div>
     </div>
 
     <div class="map" id="map"></div>

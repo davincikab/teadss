@@ -134,4 +134,12 @@ $("#year-slider").on("change", function(e) {
 });
 
 
+// toggle 
+var closeQueryTabButton = document.getElementById("close-btn");
+var queryTab = document.getElementById("query-tab");
+
+closeQueryTabButton.addEventListener("click", function(e) {
+    queryTab.classList.toggle("open");
+});
+
 // QUERY TOOL: 

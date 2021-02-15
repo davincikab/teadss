@@ -1,5 +1,10 @@
 from django.contrib import admin
 
-from .models import NoticeBoard
+# 3rd party
+
+
+# local code
+from .models import NoticeBoard, FarmerIssue
 
 admin.site.register(NoticeBoard)
+admin.site.register(FarmerIssue)

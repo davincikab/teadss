@@ -96,9 +96,9 @@ def decisionmarkers_view(request):
         query = request.GET.get('query')
         decisionmakers = User.objects.filter(
             Q(username__icontains=query) | Q(first_name__icontains=query) | Q(last_name__icontains=query)
-            ).filter(is_decisonmaker=True)
+            ).filter(is_decisionmaker=True)
     else:
-        decisionmakers = User.objects.filter(is_decisonmaker=True)
+        decisionmakers = User.objects.filter(is_decisionmaker=True)
 
     paginator = Paginator(decisionmakers, 10)
     page = request.GET.get('page')

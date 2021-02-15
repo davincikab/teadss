@@ -1,4 +1,4 @@
-from django.db import models
+from django.contrib.gis.db import models
 
 # Create your models here.
 class NoticeBoard(models.Model):
@@ -18,3 +18,28 @@ class NoticeBoard(models.Model):
 
     # def get_absolute_url(self):
     #     return reverse("NoticeBoard_detail", kwargs={"pk": self.pk})
+
+class FarmerIssue(models.Model):
+    ISSUE_CHOICES = (
+        ('Pest', 'Pest'),
+        ('Disease', 'Disease'),
+        ('Pest and Diseases', 'Pest and Diseases'),
+        ('Others', 'Others')
+    )
+
+    title = models.CharField("Title", max_length=50)
+    issues = models.CharField("Issue", max_length=50, choices=ISSUE_CHOICES)
+    description = models.TextField()
+    geom = models.PointField(srid=4326)
+    location_name = models.CharField("Location Name", max_length=50)
+    reported_on = models.DateTimeField("Reported On", auto_now=True)
+
+    class Meta:
+        verbose_name = "Farmer Issue"
+        verbose_name_plural = "Farmer Issues"
+
+    def __str__(self):
+        return self.title
+
+    # def get_absolute_url(self):
+    #     return reverse("FarmerIssue_detail", kwargs={"pk": self.pk})

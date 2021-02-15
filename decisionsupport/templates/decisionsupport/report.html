@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %} My Map {% endblock %}
+{% block title %} Report {% endblock %}
 {% block style %}
     <link rel="stylesheet" href="{% static 'css/reports.css' %}">
     <link rel="stylesheet" href="{% static 'leaflet/leaflet.css' %}">
@@ -30,17 +30,36 @@
         <button class="btn btn-sm btn-primary mt-2" id="report-my-location">Report My Location</button>
     </div>
 
-    
-
     <!-- reporting modal -->
-<div class="modal" tabindex="-1" id="user-location-modal">
+<div class="modal fade" tabindex="-1" id="user-location-modal">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-body">
-            <p class="text-center">Report My Location</p>
+            <p class="text-center">Report An Issue</p>
             <form action="" method="post" id="user-location-form" enctype="multipart/form-data">
                 {% csrf_token %}
-                {{ form }}
+                <div class="row">
+                    <div class="col-6">
+                        {{ form.title.label_tag }}
+                        {{ form.title }}
+
+                        {{ form.issues.label_tag }}
+                        {{ form.issues }}
+
+                        {{ form.location_name.label_tag }}
+                        {{ form.location_name }}
+
+                        {{ form.geom.label_tag }}
+                        <input type="text" name="geom" id="id_geom" value="{{ form.geom.value }}" class="form-control" readonly>
+
+                    </div>
+
+                    <div class="col-6">
+                        
+                        {{ form.description.label_tag }}
+                        {{ form.description }}
+                    </div>
+                </div>
                 <small class="text-danger" id="error-message"></small>
                 <div class="form-group mt-2">
                     <button type="submit" class="btn btn-sm btn-success" id="confirm-location">Submit</button>
@@ -56,8 +75,10 @@
 {% block javascript %}
     <script src="{% static 'leaflet/leaflet.js' %}"></script>
     <script src="{% static 'js/leaflet-heat.js' %}"></script>
+    <script src="{% static 'js/addControl.js' %}"></script>
     <script>
         var isGeolocationActive = false;
+        var myLocation;
         var map = L.map('map', {
             center: [0.099242, 34.051121],
             zoom: 13,
@@ -84,12 +105,9 @@
         var reportedLocationGeo = L.geoJSON(null, {
             onEachFeature:function(feature, layer) {
                 let popupString =  "<div class='popup-content'>"+
-                    "<h5 class='my-0 mx-2'>"+ feature.properties.first_name+"</h5>" +
+                    "<h5 class='my-0 mx-2'>"+ feature.properties.title+"</h5>" +
+                    "<p class='my-1 mx-2'><b>Issue</b> <br>"+ feature.properties.issue +"</p>"+
                     "<p class='my-0 mx-2'><b>Description</b> <br>"+ feature.properties.description +"</p>" +
-                    "<p class='my-1 mx-2'><b>Is Evacuated</b> <br>"+ feature.properties.is_evacuated +"</p>"+
-                    "<div>" +
-                        (feature.properties.image ? "<img src='/media/"+ feature.properties.image +"'/>" : "") +
-                    "</div>" +
                     "</div>";
 
                 layer.bindPopup(popupString);
@@ -165,6 +183,22 @@
             }
         }
 
+        
+        map.on("locationfound", function(e) {
+            // update myLocation
+            myLocation = e.latlng;
+
+            // update geom input file
+            let val = "SRID=4326;POINT ("+ myLocation.lng +" "+ myLocation.lat +")";
+            $('#id_geom').val(val);
+
+        });
+
+        map.on("locationerror" , function(e) {
+            isgeolocateByMapClick = true;
+            alert("Click your Location on the Map");
+        });
+
         // update user issues
         var userLocationModal = $("#user-location-modal");
         var toggleUserLocationButton =  $("#report-my-location");
@@ -188,7 +222,7 @@
             userLocationData.append('geom', Object.values(myLocation).reverse().join(" "));
 
             // add the geom
-            fetch('/add_user_location/', {
+            fetch('/report/', {
                 method:'POST',
                 body:userLocationData
             })

@@ -4,7 +4,7 @@ from .views import map_view, index, forum
 
 urlpatterns = [
     path('', index , name="home"),
-    path('map', map_view, name="map"),
+    path('map/', map_view, name="map"),
     path('forum', forum, name="forum"),
 ]
 

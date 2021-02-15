@@ -129,6 +129,7 @@ $("#year-slider").on("change", function(e) {
 
     console.log(value);
     $("#title-year").text(value);
+    $("#year-span").text(value);
 
     filterByYear(parseInt(value));
 });

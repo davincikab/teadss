@@ -38,13 +38,12 @@ crossorigin=""/>
         cursor: pointer;
         border-radius: 2px;
         padding: 0.3em;
-        top:0%;
+        top:15%;
         right:-5%;
     }
+
     .query-tab .section {
-        height: 20vh;
-        width: 100%;
-        background-color: var(--gray);
+        height: auto;
         margin-bottom: 1em;
     }
 </style>
@@ -54,25 +53,32 @@ crossorigin=""/>
 <div class="container-fluid">
     <h4 class="year" id="title-year">1989</h4>
 
-    <div class="slider">
-        <label for="">Year 
-            <!-- <span id="help-year" class="text-small"> 1989 </span></label><br> -->
-        <input type="range" min="1989" max="2019" step="10" id="year-slider" value="1989">
-    </div>
+    
 
-    <div class="query-tab" id="query-tab">
-        <h5>QUERY TOOL</h5>
+    <div class="query-tab open" id="query-tab">
+        <div class="bg-dark text-white py-2 px-2">Analysis Tool</div>
         <div class="close-btn" id="close-btn">
             <i class="fa fa-times"></i>
         </div>
 
-
         <div class="section">
+            <h5>Land Use Land Cover</h5>
+            <div class="slider form-group px-3">
+                <label for="" class="d-flex w-100">
+                    Year
+                    <span class="" id="year-span">1989</span>
+                 </label>
 
+                <input type="range" class="w-100 form-range" name="year" min="1989" max="2019" step="10" id="year-slider" value="1989">
+            </div>
         </div>
 
         <div class="section">
-            
+            <h5>Suitable Areas for Tea Plantation</h5>
+
+            <div class="">
+                <!-- display suitable location -->
+            </div>
         </div>
         <div class="section">
             

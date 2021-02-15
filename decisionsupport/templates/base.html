@@ -48,6 +48,14 @@
                 <a class="nav-link" href="{% url 'forum' %}" tabindex="-1">Forum</a>
               </li>
 
+              <li class="nav-item {% if section == 'notice' %} active {% endif %}">
+                <a class="nav-link" href="{% url 'noticeboard' %}" tabindex="-1">Notice Board</a>
+              </li>
+
+              <li class="nav-item {% if section == 'report' %} active {% endif %}">
+                <a class="nav-link" href="{% url 'report' %}" tabindex="-1">Report</a>
+              </li>
+
               <li class="nav-item">
                 <!-- <a class="nav-link" href="#" tabindex="-1">About</a> -->
               </li>

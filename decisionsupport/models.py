@@ -7,6 +7,7 @@ class NoticeBoard(models.Model):
     date_from = models.DateField("From Date")
     date_to = models.DateField("To Date")
     location = models.CharField("Location", max_length=50, blank=True)
+    created_on = models.DateTimeField("Created On", auto_now=True)
 
     class Meta:
         verbose_name = "NoticeBoard"

@@ -1,0 +1,218 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} My Map {% endblock %}
+{% block style %}
+    <link rel="stylesheet" href="{% static 'css/reports.css' %}">
+    <link rel="stylesheet" href="{% static 'leaflet/leaflet.css' %}">
+    <style>
+        .col-md-12 {
+            /* padding: 0; */
+        }
+
+        img {
+            width:100%;
+        }
+        
+        #report-my-location {
+            z-index: 2;
+            position: absolute;
+            bottom: 3%;
+            left:2%;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="map" id="map"></div>
+
+        <button class="btn btn-sm btn-primary mt-2" id="report-my-location">Report My Location</button>
+    </div>
+
+    
+
+    <!-- reporting modal -->
+<div class="modal" tabindex="-1" id="user-location-modal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body">
+            <p class="text-center">Report My Location</p>
+            <form action="" method="post" id="user-location-form" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form }}
+                <small class="text-danger" id="error-message"></small>
+                <div class="form-group mt-2">
+                    <button type="submit" class="btn btn-sm btn-success" id="confirm-location">Submit</button>
+                    <button type="button" class="btn btn-sm btn-warning" data-dismiss="modal" id="dismiss-location">Cancel</button>
+                </div>
+            </form>
+        </div>
+      </div>
+    </div>
+</div>
+</div>
+{% endblock %}
+{% block javascript %}
+    <script src="{% static 'leaflet/leaflet.js' %}"></script>
+    <script src="{% static 'js/leaflet-heat.js' %}"></script>
+    <script>
+        var isGeolocationActive = false;
+        var map = L.map('map', {
+            center: [0.099242, 34.051121],
+            zoom: 13,
+        }); 
+
+        
+        // add a tile Layer
+        var cartoLight = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}' + (L.Browser.retina ? '@2x.png' : '.png'), {
+            attribution:'&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attributions">CARTO</a>',
+            subdomains: 'abcd',
+            maxZoom: 20,
+            minZoom: 0
+        }).addTo(map);
+
+
+        var baseLayer = {
+            "Carto Light":cartoLight
+        };
+
+
+        // spinner.classList.add('d-none');
+
+        // geojson data
+        var reportedLocationGeo = L.geoJSON(null, {
+            onEachFeature:function(feature, layer) {
+                let popupString =  "<div class='popup-content'>"+
+                    "<h5 class='my-0 mx-2'>"+ feature.properties.first_name+"</h5>" +
+                    "<p class='my-0 mx-2'><b>Description</b> <br>"+ feature.properties.description +"</p>" +
+                    "<p class='my-1 mx-2'><b>Is Evacuated</b> <br>"+ feature.properties.is_evacuated +"</p>"+
+                    "<div>" +
+                        (feature.properties.image ? "<img src='/media/"+ feature.properties.image +"'/>" : "") +
+                    "</div>" +
+                    "</div>";
+
+                layer.bindPopup(popupString);
+            }
+        });
+
+        // heatmapLayer
+        var reportedLocation = L.heatLayer([]).addTo(map);
+
+        var overlay = {
+            'Reported Points':reportedLocationGeo,
+            'Heat Map':reportedLocation
+        };
+
+        L.control.layers(baseLayer, overlay).addTo(map);
+
+        fetch("/get_reported_issues/")
+        .then(res => res.json())
+        .then(response => {
+            console.log(response.location);
+
+            const data = JSON.parse(response.location)
+            reportedLocationGeo.addData(data);
+
+            updateHeatLayer(data);
+        })
+        .catch(error => {
+            console.error(error);
+        });
+
+        // heatmap
+        function updateHeatLayer(data) {
+            let pnts = data.features.map(feature => {
+                let coord = feature.geometry.coordinates;
+
+                return [coord[1], coord[0]]
+            });
+
+            console.log(pnts);
+
+            reportedLocation.setLatLngs(pnts);
+        }
+        
+
+        // reporting logic
+        // Geolocation control
+        var geolocationControl = new L.Control({position:'topleft'});
+        geolocationControl.onAdd = function(map) {
+            let div = L.DomUtil.create('button', 'btn-geo btn-circle btn-sm');
+            div.innerHTML = '<i class="fa fa-location-arrow"></i>'
+
+            div.addEventListener('click', function(e) {
+                triggerGeolocation();
+            });
+
+            return div;
+        }
+
+        geolocationControl.addTo(map);
+
+        function triggerGeolocation() {
+            if(isGeolocationActive) {
+                map.stopLocate();
+                isGeolocationActive = false;
+
+                // update the geolocation Icon
+            } else {
+                map.locate({
+                    watch:true,
+                    setView:true,
+                    enableHighAccuracy:true
+                });
+            }
+        }
+
+        // update user issues
+        var userLocationModal = $("#user-location-modal");
+        var toggleUserLocationButton =  $("#report-my-location");
+        var userLocationFormElement = document.querySelector("#user-location-form");
+        var userLocationForm = $("#user-location-form");
+
+        toggleUserLocationButton.on('click', function(e) {
+            // check if myLocation id defined
+            if(myLocation) {
+                userLocationModal.modal('show');
+            } else {
+                alert('Provide user location');
+            }
+        });
+
+        userLocationForm.on("submit", function(e) {
+            e.preventDefault();
+            let userLocationData = new FormData(userLocationFormElement);
+
+            
+            userLocationData.append('geom', Object.values(myLocation).reverse().join(" "));
+
+            // add the geom
+            fetch('/add_user_location/', {
+                method:'POST',
+                body:userLocationData
+            })
+            .then(response => response.json())
+            .then(({message}) => {
+                console.log(message);
+                if(message == 'success') {
+                    userLocationModal.modal('hide');
+                    userLocationFormElement.reset();
+
+                    // update snackbar message
+                snackbar.addClass('open');
+                snackbar.text("Successfully reported your location")
+                } else {
+                    $('error-message').text("");
+                }
+            })
+            .catch(error => {
+                console.error(error);
+            });
+        });
+
+        $('#dismiss-location').on('click', function(e) {
+            userLocationFormElement.reset();
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Notice Board {% endblock %}
+{% block style %}
+    <style>
+        .issues-list {
+            height: 90vh;
+        }
+        .issue {
+            box-shadow: 3px 3px 0.4em #ccc;
+            padding: 1em 0.6em;
+        }
+
+        .dates {
+            justify-content: space-between;
+        }
+        
+        .header {
+            justify-content: space-between;
+        }
+    </style>
+{% endblock %}
+{% block content %}
+<div class="container mt-5">
+    <h5 class="mt-5">Notice Board</h5>
+
+    <div class="row">
+        <div class="col-md-10 " id="">
+            <div class="issues-list">
+               
+                <div class="">
+                    <div class="header">
+                        {% if user.is_decisionmaker %}
+                       <form action="" method="POST">
+                           {% csrf_token %}
+                            {{ form.errors }}
+                            <div class="form-row">
+                                <div class="col-6">
+                                    {{ form.title.label_tag }}
+                                    {{ form.title }}
+
+                                    {{ form.date_from.label_tag }}
+                                    {{ form.date_from }}
+
+                                    {{ form.date_to.label_tag }}
+                                    {{ form.date_to }}
+
+                                    {{ form.location.label_tag }}
+                                    {{ form.location }}
+
+                                </div>
+                                
+
+                                <div class="col-6">
+                                    {{ form.description.label_tag }}
+                                    {{ form.description }}
+                                </div>
+                            </div>
+                           <input type="submit" class="btn btn-success mt-3" value="Add Notice">
+                       </form>
+                       {% endif %}
+
+                       <div class="search-event">
+                        <form class="d-flex my-2">
+                            <input class="form-control me-2" type="search" name="title" placeholder="Search" aria-label="Search">
+                            <button class="btn btn-outline-success" type="submit">Search</button>
+                          </form>
+                       </div>
+                    </div>
+                    
+                    {% for notice in notices %}
+                        <div class="issue">
+                            <h5>{{ notice.title }}, <small>{{ notice.location }}</small></h5>
+                            <p>
+                                {{ notice.description }}
+                            </p>
+
+                            <div class="d-flex text-muted dates">
+                                <span>From <b>{{ notice.date_from }}</b></span>
+                                <span>To <b>{{ notice.date_to }}</b></span>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    
+                </div>
+            </div>
+            <div class="comment-section">
+                <div class="comment-form"></div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <h5>Topics</h5>
+            <div class="">
+                {% for topic in topics %}
+                     <div class="tag">
+                         
+                     </div>        
+                {% endfor %}
+            </div>
+
+            <h5>Tags</h5>
+            <div class="">
+                {% for tag in tags %} 
+                    <div class="tag">
+                        
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block javascript %}
+    <script src="{% static 'js/addControl.js' %}"></script>
+{% endblock %}

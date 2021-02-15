@@ -31,6 +31,7 @@ def report(request):
         if form.is_valid():
             issue = form.save(commit=False)
             issue.geom = GEOSGeometry(geom)
+            issue.reported_by = request.user
             issue.save()
 
             return HttpResponse(json.dumps({'message':'success'}))

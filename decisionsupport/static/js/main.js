@@ -50,9 +50,47 @@ fetch("/static/data/landuse.pbf", { responseType:'ArrayBuffer'})
     console.error(error);
 });
 
+// Suitable area for tea farming
+var suitableAreas = L.geoJSON(null, {
+    onEachFeature:function(feature, layer) {
+        layer.bindPopup(feature.properties.DN);
+
+    },
+    style:function(feature){
+        return {
+            fillColor:getSuitabilityColors(feature),
+            weight:0,
+            fillOpacity:0.7
+        }
+    }
+});
+
+
+
+function getSuitabilityColors(feature) {
+    let dn = feature.properties.DN;
+    let colors = ['rgb(186, 20, 20)', 'rgb(230, 134, 90)', 'rgb(255, 255, 191)', 'rgb(149, 199, 105)', 'rgb(54, 145, 33)'];
+
+    console.log(dn-1);
+    return colors[dn-1] || "#000";
+}
+
+// fetch the data
+fetch('/static/data/suitability.geojson')
+.then(res => res.json())
+.then(response => {
+    console.log(response);
+
+    suitableAreas.addData(response);
+})
+.catch(error => {
+    console.error(error);
+});
+
 // layer control
 var overlay = {
     'Land Use':landuse,
+    'Suitable Areas':suitableAreas
 };
 
 var baseLayers = {
@@ -144,3 +182,4 @@ closeQueryTabButton.addEventListener("click", function(e) {
 });
 
 // QUERY TOOL: 
+

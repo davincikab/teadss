@@ -1,4 +1,7 @@
 from django.contrib.gis.db import models
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 # Create your models here.
 class NoticeBoard(models.Model):
@@ -33,6 +36,7 @@ class FarmerIssue(models.Model):
     geom = models.PointField(srid=4326)
     location_name = models.CharField("Location Name", max_length=50)
     reported_on = models.DateTimeField("Reported On", auto_now=True)
+    reported_by = models.ForeignKey(User, on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = "Farmer Issue"
